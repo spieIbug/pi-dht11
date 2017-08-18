@@ -6,9 +6,20 @@
 # -   -> Any ground on pi
 import sys
 import Adafruit_DHT
+import requests
 
-while True:
+url = 'http://server.technosofteam.com/pi/'
 
-    humidity, temperature = Adafruit_DHT.read_retry(11, 4)
+try:
+    while True:
+         humidity, temperature = Adafruit_DHT.read_retry(11, 4)
+         data = '{{"temp": "{0:0.1f}", "humidity": "{1:0.1f}"}} '.format(temperature, humidity)
+         response = requests.post(url, data=data)
+         print "sending : " + data
+         # print response.text
+except KeyboardInterrupt:
+    print "\Stopping capture"
 
-    print 'Temp: {0:0.1f} C  Humidity: {1:0.1f} %'.format(temperature, humidity)
+finally:
+    print "\exit"
+
